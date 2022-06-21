@@ -6,3 +6,4 @@ pandas~=1.4.2
 keras~=2.9.0
 pandas_datareader
 gunicorn
+tensorflow
