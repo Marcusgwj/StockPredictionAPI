@@ -35,7 +35,6 @@ def lstm(ticker):
     y_train = []  # Target variables
 
     # We're using the past 60 days to predict the 61st day
-    # Should this be adjustable by user?
     for i in range(60, len(train_data)):
         x_train.append(train_data[i - 60:i, 0])  # Position 0 - 59
         y_train.append(train_data[i, 0])  # Position 60
@@ -47,39 +46,35 @@ def lstm(ticker):
     x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
     # Build the LSTM model
-    # Should the model be adjustable by user?? Both layers and number of neurons?
     model = Sequential()
 
-    model.add(LSTM(50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
     # Add a layer with 50 neurons.
     # return_sequences is True because we're going to add another LSTM layer after this layer.
     # input_shape is the number of time steps (60, which is x_train.shape[1]) and number of features (1)
+    model.add(LSTM(50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
 
-    model.add(LSTM(50, return_sequences=False))
     # Second layer will also have 50 neurons
     # return_sequences is False because we're not going to use any LSTM layers after this layer.
+    model.add(LSTM(50, return_sequences=False))
 
-    model.add(Dense(25))
     # A regular densely connected neural network layer with 25 neurons
+    model.add(Dense(25))
 
-    model.add(Dense(1))
     # A layer with just 1 neuron
+    model.add(Dense(1))
 
     # Compile the model
-
     # Optimizer to improve upon the loss function
     # Loss function is to measure how well the model did on training, how far it is from the real data
     model.compile(optimizer='adam', loss='mean_squared_error')
 
     # Train the model
-
     # batch size is the total number of training examples present in the single batch. It's 1 because we don't want to further divide it into more batches.
     # epochs is the number of iterations when the entire set has gone forward and backward
     model.fit(x_train, y_train, batch_size=1, epochs=1)
 
     # Create the testing data set
     # Create a new array containing scaled values from index 1243 to end (1628?).
-
     test_data = scaled_data[training_data_len - 60:]
 
     # Create the data sets x_test and y_test
@@ -102,13 +97,7 @@ def lstm(ticker):
 
     # Evaluate our model
     # Get the root mean squared error (RMSE), how accurate the model is
-    # Should we show the rmse for test data to user?
-
     rmse = np.sqrt(np.mean(predictions - y_test) ** 2)
-
-    # small error in your equation for RMSE. You need to take the mean of the squared residuals rather than the square of the mean of the residuals.
-
-    # This is quite a good value, considering our data is at about ten thousands (the stock price)
 
     # Plot the data
     train = close[:training_data_len]
@@ -128,13 +117,10 @@ def lstm(ticker):
     # Not using fit transform because we want to use the MinMaxScaler when we first train and test the data
     last_60_days_scaled = scaler.transform(last_60_days)
 
-    # Create an empty list
     X_test = []
 
-    # Append the past 60 days into the X_test
     X_test.append(last_60_days_scaled)
 
-    # Convert the X_test data set to a numpy array to use it to LSTM model
     X_test = np.array(X_test)
 
     # Reshape the data into 3D
@@ -173,6 +159,5 @@ def lstm(ticker):
             last_60_days_scaled = scaler.transform(last_60_days)
         return np.array(pred_price_lst)
 
-    # 1086 is for three years. Can ask user to adjust how long they want it to predict for.
     return predict(7)
 
