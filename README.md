@@ -5,19 +5,6 @@
 
 <h3 align="center">Stock prediction models API</h3>
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li> <a href="#about-the-project">About The Project</a></li>
-    <li><a href="#built-with">Built With</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#milestone-1">Milestone 1</a></li>
-    <li><a href="#milestone-2">Milestone 2</a></li>
-    <li><a href="#contributors">Contributors</a></li>
-  </ol>
-</details>
-
 ## About The Project
 
 Stock predictions are made using the following models:
