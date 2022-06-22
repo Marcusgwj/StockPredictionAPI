@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from lstm import lstm
 from lr import lr
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/', methods=["GET"])
 def home():
