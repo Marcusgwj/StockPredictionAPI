@@ -3,6 +3,8 @@ from lstm import lstm
 from lr import lr
 from flask_cors import CORS
 
+from svm import svm
+
 app = Flask(__name__)
 CORS(app)
 
@@ -26,7 +28,7 @@ def predict_lstm():
 @app.route('/svm', methods=["POST"])
 def predict_svm():
     json = request.json
-    result = (lstm(json["ticker"]))
+    result = (svm(json["ticker"]))
     return jsonify({"Result": result.tolist()})
 
 

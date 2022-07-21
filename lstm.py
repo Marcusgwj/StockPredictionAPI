@@ -9,7 +9,7 @@ from keras.models import load_model
 
 def lstm(ticker):
     current_date = datetime.now()
-    start_date = datetime.now() - relativedelta(years=1)
+    start_date = datetime.now() - relativedelta(years=3)
     scaler = MinMaxScaler(feature_range=(0, 1))
 
     model = load_model('lstm_model.h5')

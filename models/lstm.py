@@ -1,7 +1,6 @@
 import math
 import pandas_datareader as web
 import numpy as np
-import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
@@ -15,37 +14,29 @@ ticker = "AAPL"
 
 data = web.DataReader(ticker, data_source="yahoo", start=start_date, end=current_date)
 
-# Create a new dataframe with only the 'Close column'
 close = data.filter(['Close'])
 
-# Convert the dataframe to a numpy array
 dataset = close.values
 
-# 80%  of rows will be used for training data
 training_data_len = math.ceil(len(dataset) * 0.8)
 
-# Scale the data, 0 and 1 inclusive
 scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(dataset)
-# Create the scaled training data set
 train_data = scaled_data[0:training_data_len, :]
 
-# Split the data into x_train and y_train data sets
-x_train = []  # Independent training variables/features
-y_train = []  # Target variables
+x_train = []  
+y_train = []  
 
 # We're using the past 60 days to predict the 61st day
 for i in range(60, len(train_data)):
-    x_train.append(train_data[i - 60:i, 0])  # Position 0 - 59
-    y_train.append(train_data[i, 0])  # Position 60
+    x_train.append(train_data[i - 60:i, 0])  
+    y_train.append(train_data[i, 0])  
 
-# Convert the x_train and y_train to numpy arrays
 x_train, y_train = np.array(x_train), np.array(y_train)
 
 # Reshape the data set (because LSTM model expects 3D or higher, not just 2D)
 x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
-# Build the LSTM model
 model = Sequential()
 
 # Add a layer with 50 neurons.
@@ -63,39 +54,27 @@ model.add(Dense(25))
 # A layer with just 1 neuron
 model.add(Dense(1))
 
-# Compile the model
-# Optimizer to improve upon the loss function
-# Loss function is to measure how well the model did on training, how far it is from the real data
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Train the model
-# batch size is the total number of training examples present in the single batch. It's 1 because we don't want to further divide it into more batches.
+# batch size is the total number of training examples present in the single batch. 
 # epochs is the number of iterations when the entire set has gone forward and backward
 model.fit(x_train, y_train, batch_size=1, epochs=1)
 
-# Create the testing data set
-# Create a new array containing scaled values from index 1243 to end (1628?).
 test_data = scaled_data[training_data_len - 60:]
 
-# Create the data sets x_test and y_test
 x_test = []
 y_test = dataset[training_data_len:]
 
 for i in range(60, len(test_data)):
     x_test.append(test_data[i - 60:i, 0])
 
-# Convert the data into a numpy array, so that we can use it in the LSTM model
 x_test = np.array(x_test)
 
-# Reshape the data from 2D to 3D, because LSTM model needs 3D
 x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
-# Get the model's predicted price values
 predictions = model.predict(x_test)
-predictions = scaler.inverse_transform(predictions)  # We're unscaling the values, and we want it to be the same as y_test dataset!
+predictions = scaler.inverse_transform(predictions)  # unscaling the values
 
-# Evaluate our model
-# Get the root mean squared error (RMSE), how accurate the model is
 rmse = np.sqrt(np.mean(predictions - y_test) ** 2)
 
 model.save("lstm_model.h5")
