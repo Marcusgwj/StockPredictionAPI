@@ -9,9 +9,9 @@
 
 Stock predictions are made using the following models:
 
-- Long short-term memory
-- Linear regression
-- Support vector machine
+- Long Short-Term Memory
+- Linear Regression
+- Support Vector Regression
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -30,11 +30,11 @@ Stock predictions are made using the following models:
 
 ## Usage
 
-Make a post request to each of the following routes:
+Make a Post request to each of the following routes:
 
-- Long short-term memory : https://stock-predictionapi.herokuapp.com/lstm
-- Linear regression: https://stock-predictionapi.herokuapp.com/lr
-- Support vector machine: https://stock-predictionapi.herokuapp.com/svm
+- Long Short-Term Memory : https://stock-predictionapi.herokuapp.com/lstm
+- Linear Regression: https://stock-predictionapi.herokuapp.com/lr
+- Support Vector Regression: https://stock-predictionapi.herokuapp.com/svr
 
 Include the ticker symbol of the stock in the request body.
 

@@ -5,10 +5,11 @@ from sklearn.model_selection import train_test_split
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import pickle
+from sklearn.preprocessing import MinMaxScaler
 
 currentDate = datetime.now()
-startDate = datetime.now() - relativedelta(years=5)
-ticker = "AAPL"
+startDate = datetime.now() - relativedelta(years=2)
+ticker = "MSFT"
     
 df = web.DataReader(ticker, data_source="yahoo", start=startDate, end=currentDate)
 df = df[['Close']]
@@ -25,17 +26,18 @@ y = np.array(df['Prediction'])
 
 y = y[:-forecast_out]
 
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+scaler = MinMaxScaler(feature_range=(0, 1))
+X_scaled = scaler.fit_transform(X)
+Y_scaled = scaler.fit_transform(y.reshape(-1, 1)).flatten()
 
-# Create and train the Support Vector Machine (Regressor)
-# rbf is radio basis function (kernel)
-# The free parameters in the model are C and epsilon.
-svr_rbf = SVR(kernel='rbf', C=1e8, gamma=0.001)
+x_train, x_test, y_train, y_test = train_test_split(X_scaled, Y_scaled, test_size=0.2)
+
+svr_rbf = SVR(kernel='linear', C=1e7, gamma='auto')
 
 svr_rbf.fit(x_train, y_train)
 
-svm_confidence = svr_rbf.score(x_test, y_test)
+svr_confidence = svr_rbf.score(x_test, y_test)
 
-with open('svm_pkl', 'wb') as files:
+with open('svr_pkl', 'wb') as files:
     pickle.dump(svr_rbf, files)
 
