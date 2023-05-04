@@ -32,10 +32,9 @@ Stock predictions are made using the following models:
 
 Make a Post request to each of the following routes:
 
-- Long Short-Term Memory : https://stockpredictionapi.onrender.com/lstm
-- Linear Regression: https://stockpredictionapi.onrender.com/lr
-- Support Vector Regression: https://stockpredictionapi.onrender.com/svr
-
+- Long Short-Term Memory : https://stock-predictionapi.onrender.com/lstm
+- Linear Regression: https://stock-predictionapi.onrender.com/lr
+- Support Vector Regression: https://stock-predictionapi.onrender.com/svr
 Include the ticker symbol of the stock in the request body.
 
 For example:
